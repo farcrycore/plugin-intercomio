@@ -114,11 +114,11 @@
 		<cfif env eq "production">
 			<!--- production environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","prodAppID","")>
-			<cfset stResult["api_key"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodAppKey",""))>
+			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodAppKey",""))>
 		<cfelse>
 			<!--- test environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","testAppID","")>
-			<cfset stResult["app_key"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testAppKey",""))>
+			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testAppKey",""))>
 		</cfif>
 
 		<cfreturn stResult>
