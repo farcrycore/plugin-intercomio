@@ -3,14 +3,14 @@
 	<cfproperty name="prodAppID" type="string" default=""
 				ftSeq="1" ftFieldSet="PRODUCTION API" ftLabel="PROD App ID" />
 
-	<cfproperty name="prodAppKey" type="string" default=""
-				ftSeq="2" ftFieldSet="PRODUCTION API" ftLabel="PROD App Key" />
+	<cfproperty name="prodSecretKey" type="string" default=""
+				ftSeq="2" ftFieldSet="PRODUCTION API" ftLabel="PROD Secret Key" />
 
 	<cfproperty name="testAppID" type="string" default=""
 				ftSeq="11" ftFieldSet="TEST API" ftLabel="TEST App ID" />
 
-	<cfproperty name="testAppKey" type="string" default=""
-				ftSeq="12" ftFieldSet="TEST API" ftLabel="TEST App Key" />
+	<cfproperty name="testSecretKey" type="string" default=""
+				ftSeq="12" ftFieldSet="TEST API" ftLabel="TEST App Secret Key" />
 	
 
 	<cffunction name="buildRequestJSON" returntype="struct">
@@ -114,11 +114,11 @@
 		<cfif env eq "production">
 			<!--- production environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","prodAppID","")>
-			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodAppKey",""))>
+			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodSecretKey",""))>
 		<cfelse>
 			<!--- test environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","testAppID","")>
-			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testAppKey",""))>
+			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testSecretKey",""))>
 		</cfif>
 
 		<cfreturn stResult>
