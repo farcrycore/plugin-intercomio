@@ -14,12 +14,12 @@
 	
 
 	<cffunction name="buildRequestJSON" returntype="struct">
-		<cfargument name="user" type="any" required="true">
+		<cfargument name="user" type="any" required="false" default="">
 		<cfargument name="company" type="any" required="false" default="">
 
-		<cfset var stAuthentication = getAPIAuthentication(userID=user.user_id)>	
-		<cfset var stUser = arguments.user>	
-		<cfset var stCompany = arguments.company>	
+		<cfset var stAuthentication = structNew()>	
+		<cfset var stUser = structNew()>	
+		<cfset var stCompany = structNew()>	
 
 		<cfset var stResult = structNew()>
 		<cfset stResult.message = "">
@@ -27,17 +27,29 @@
 		<!--- if data type is not query, convert convert to struct --->
 		<cfif isQuery(arguments.user)>
 			<cfset stUser = queryToStruct(arguments.user)>
+		<cfelseif isStruct(arguments.user)>
+			<cfset stUser = arguments.user>
 		</cfif>
 
 		<cfif isQuery(arguments.company)>
 			<cfset stCompany = queryToStruct(arguments.company)>
+		<cfelseif isStruct(arguments.company)>
+			<cfset stCompany = arguments.company>
+		</cfif>
+
+		<cfif structKeyExists(stUser, "user_id") AND len(stUser.user_id)>
+			<cfset stAuthentication = getAPIAuthentication(userID=stUser.user_id)>
+		<cfelse>
+			<cfset stAuthentication = getAPIAuthentication(userID="")>
 		</cfif>
 
 		<!--- append API ID & Key --->
 		<cfset StructAppend(stUser, stAuthentication)>
 
 		<!--- insert company metadata --->
-		<cfset StructInsert(stUser, "company", stCompany)>
+		<cfif NOT structIsEmpty(stCompany)>
+			<cfset StructInsert(stUser, "company", stCompany)>
+		</cfif>
 
 		<cfif validate(stUser)>
 			<cfset stResult.stUser = stUser>
@@ -86,6 +98,10 @@
 	<cffunction name="validate" output="false" returntype="string" hint="validate metadata">
 		<cfargument name="stMetadata" type="struct" required="true" />
 
+		<cfif StructCount(stMetadata) eq 1 AND structKeyExists(stMetadata,"app_id") AND len(stMetadata.app_id)> 
+			<cfreturn true>
+		</cfif>
+
 		<!--- Required: id , user_id or email --->
 		<cfif structKeyExists(stMetadata,"id") AND len(stMetadata.id)>
 			<cfreturn true>
@@ -114,11 +130,15 @@
 		<cfif env eq "production">
 			<!--- production environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","prodAppID","")>
-			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodSecretKey",""))>
+			<cfif len(arguments.userID)>
+				<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","prodSecretKey",""))>
+			</cfif>
 		<cfelse>
 			<!--- test environment --->
 			<cfset stResult["app_id"] = application.fapi.getConfig("intercom","testAppID","")>
-			<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testSecretKey",""))>
+			<cfif len(arguments.userID)>
+				<cfset stResult["user_hash"] = getUserHash(arguments.userID, application.fapi.getConfig("intercom","testSecretKey",""))>
+			</cfif>
 		</cfif>
 
 		<cfreturn stResult>

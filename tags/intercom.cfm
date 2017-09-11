@@ -45,29 +45,29 @@ Company
 <cfparam name="attributes.user" default="">
 <cfparam name="attributes.company" default="">
 
-<cfif application.fapi.isLoggedIn()>
 
-	<!--- 
-	 // Build JSON request string for the create/update user API
-	--------------------------------------------------------------------------------->
-	<cfset oIntercom = createobject("component",application.stcoapi.configIntercom.packagePath) />
-	<cfset stResult = oIntercom.buildRequestJSON(user=attributes.user,company=attributes.company)>
 
-	<!--- 
-	 // render js embed
-	--------------------------------------------------------------------------------->
-	<cfoutput>
-		<cfif stResult.bSuccess>
-			<script>
-			  window.intercomSettings = #serializejson(stResult.stUser)#;
-			</script>
+<!--- 
+ // Build JSON request string for the create/update user API
+--------------------------------------------------------------------------------->
+<cfset oIntercom = createobject("component",application.stcoapi.configIntercom.packagePath) />
+<cfset stResult = oIntercom.buildRequestJSON(user=attributes.user,company=attributes.company)>
 
-			<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/#stResult.stUser.app_id#';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
-		<cfelse>
-			#stResult.message#
-		</cfif>
-	</cfoutput>
-</cfif>
+<!--- 
+ // render js embed
+--------------------------------------------------------------------------------->
+<cfoutput>
+	<cfif stResult.bSuccess>
+		<script>
+		  window.intercomSettings = #serializejson(stResult.stUser)#;
+		</script>
+
+		<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/#stResult.stUser.app_id#';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+	<cfelse>
+		#stResult.message#
+	</cfif>
+</cfoutput>
+
 
 </cfif>
 <cfsetting enablecfoutputonly="false">
