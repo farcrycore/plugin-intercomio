@@ -4,13 +4,19 @@
 				ftSeq="1" ftFieldSet="PRODUCTION API" ftLabel="PROD App ID" />
 
 	<cfproperty name="prodSecretKey" type="string" default=""
-				ftSeq="2" ftFieldSet="PRODUCTION API" ftLabel="PROD Secret Key" />
+				ftSeq="2" ftFieldSet="PRODUCTION API" ftLabel="PROD App Secret Key" />
+
+	<cfproperty name="prodAccessToken" type="string" default=""
+				ftSeq="3" ftFieldSet="PRODUCTION API" ftLabel="PROD App Access Token" />
 
 	<cfproperty name="testAppID" type="string" default=""
 				ftSeq="11" ftFieldSet="TEST API" ftLabel="TEST App ID" />
 
 	<cfproperty name="testSecretKey" type="string" default=""
 				ftSeq="12" ftFieldSet="TEST API" ftLabel="TEST App Secret Key" />
+
+	<cfproperty name="testAccessToken" type="string" default=""
+				ftSeq="13" ftFieldSet="TEST API" ftLabel="TEST App Access Token" />
 	
 
 	<cffunction name="buildRequestJSON" returntype="struct">
