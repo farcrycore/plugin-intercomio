@@ -69,6 +69,47 @@
 
 	</cffunction>
 
+	<cffunction name="buildAPIUserJSON" returntype="struct">
+		<cfargument name="user" type="any" required="false" default="">
+		<cfargument name="company" type="any" required="false" default="">
+
+		<cfset var stUser = structNew()>	
+		<cfset var stCompany = structNew()>	
+		<cfset var aCompanies = arrayNew(1)>
+		<cfset var stResult = structNew()>
+		<cfset stResult.message = "">
+
+		<!--- if data type is not query, convert convert to struct --->
+		<cfif isQuery(arguments.user)>
+			<cfset stUser = queryToStruct(arguments.user)>
+		<cfelseif isStruct(arguments.user)>
+			<cfset stUser = arguments.user>
+		</cfif>
+
+		<cfif isQuery(arguments.company)>
+			<cfset stCompany = queryToStruct(arguments.company)>
+		<cfelseif isStruct(arguments.company)>
+			<cfset stCompany = arguments.company>
+		</cfif>
+
+		<!--- insert company metadata --->
+		<cfif NOT structIsEmpty(stCompany)>
+			<cfset arrayAppend(aCompanies, stCompany) >
+			<cfset StructInsert(stUser, "companies", aCompanies)>
+		</cfif>
+
+		<cfif validate(stUser)>
+			<cfset stResult.stUser = stUser>
+			<cfset stResult.bSuccess = true>
+		<cfelse>	
+			<cfset stResult.message = "Validation Failed, Please check required attributes">
+			<cfset stResult.bSuccess = false>
+		</cfif>
+
+		<cfreturn stResult>
+
+	</cffunction>
+
 	<cffunction name="getUserHash" output="false">
 		<cfargument name="user" type="string" required="true" />
 		<cfargument name="secretkey" type="string" required="true" />
