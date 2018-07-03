@@ -36,7 +36,7 @@
 		<cfelseif isStruct(arguments.user)>
 			<cfset stUser = arguments.user>
 		</cfif>
-		<cflog text="#serializeJSON(stUser)#" file="debug">
+
 		<cfif isQuery(arguments.company)>
 			<cfset stCompany = queryToStruct(arguments.company)>
 		<cfelseif isStruct(arguments.company)>

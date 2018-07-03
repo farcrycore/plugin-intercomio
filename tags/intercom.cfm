@@ -52,7 +52,7 @@ Company
 --------------------------------------------------------------------------------->
 <cfset oIntercom = createobject("component",application.stcoapi.configIntercom.packagePath) />
 <cfset stResult = oIntercom.buildRequestJSON(user=attributes.user,company=attributes.company)>
-<cflog text="#serializeJSON(stResult)#" file="debug">
+
 <!--- 
  // render js embed
 --------------------------------------------------------------------------------->
